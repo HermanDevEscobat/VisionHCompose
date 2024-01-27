@@ -21,13 +21,12 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.visionhcompose.screen.DeviceScreen
 import com.example.visionhcompose.ui.theme.VisionHComposeTheme
 
 class MainActivity : ComponentActivity() {
@@ -47,7 +46,6 @@ class MainActivity : ComponentActivity() {
 }
 
 @SuppressLint("SuspiciousIndentation")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppContent() {
     var selectedItem by remember { mutableIntStateOf(0) }
@@ -58,17 +56,6 @@ fun AppContent() {
         NavigationItem("Settings", Icons.Filled.Settings)
     )
         Scaffold(
-            topBar = {
-                TopAppBar(
-                    colors = topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.primaryContainer,
-                        titleContentColor = MaterialTheme.colorScheme.primary,
-                    ),
-                    title = {
-                        Text("Top app bar")
-                    }
-                )
-            },
             bottomBar = {
                 BottomAppBar(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -92,10 +79,11 @@ fun AppContent() {
                     .padding(innerPadding),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                Text(
-                    modifier = Modifier.padding(8.dp),
-                    text = "Hello world!"
-                )
+                when (selectedItem) {
+                    0 -> DeviceScreen()
+                    1 -> Text("Archive was selected")
+                    2 -> Text("Settings was selected")
+                }
             }
         }
 }
