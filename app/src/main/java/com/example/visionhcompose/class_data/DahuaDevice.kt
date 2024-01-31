@@ -1,5 +1,7 @@
 package com.example.visionhcompose.class_data
 
+import androidx.annotation.DrawableRes
+
 data class DahuaDevice(
     val name: String,
     val model: String,

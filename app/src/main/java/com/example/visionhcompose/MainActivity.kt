@@ -46,9 +46,14 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppContent() {
     var selectedItem by remember { mutableIntStateOf(0) }
+
     data class NavigationItem(val label: String, val icon: ImageVector)
+
     val items = listOf(
-        NavigationItem("Device",ImageVector.vectorResource(id = R.drawable.rounded_camera_video_24)),
+        NavigationItem(
+            "Device",
+            ImageVector.vectorResource(id = R.drawable.rounded_camera_video_24)
+        ),
         NavigationItem("Archive", ImageVector.vectorResource(id = R.drawable.rounded_archive_24)),
         NavigationItem("Settings", ImageVector.vectorResource(id = R.drawable.rounded_settings_24))
     )
@@ -61,7 +66,12 @@ fun AppContent() {
                 NavigationBar {
                     items.forEachIndexed { index, item ->
                         NavigationBarItem(
-                            icon = { Icon(imageVector = item.icon, contentDescription = item.label) },
+                            icon = {
+                                Icon(
+                                    imageVector = item.icon,
+                                    contentDescription = item.label
+                                )
+                            },
                             label = { Text(item.label) },
                             selected = selectedItem == index,
                             onClick = { selectedItem = index }
@@ -77,14 +87,13 @@ fun AppContent() {
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             when (selectedItem) {
-                0 -> DeviceScreen()
+//                0 -> DeviceScreen()
                 1 -> ArchiveScreen()
                 2 -> Text("Settings was selected")
             }
         }
     }
 }
-
 
 
 @Preview

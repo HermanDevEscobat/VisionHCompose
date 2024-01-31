@@ -1,30 +1,23 @@
 package com.example.visionhcompose.screen
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material3.CardDefaults
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -33,23 +26,43 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.visionhcompose.R
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.lerp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.visionhcompose.class_data.DahuaDevice
 import com.example.visionhcompose.ui.theme.VisionHComposeTheme
+import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DeviceScreen() {
+fun DeviceScreen(onButtonClick: () -> Unit) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
+    val navController = rememberNavController()
     val deviceList by remember { mutableStateOf(createDummyDahuaDeviceList()) }
+    NavHost(navController = navController, startDestination = "main") {
+        // Определяем первый экран
+        composable("main") {
+            DeviceScreen(onButtonClick = { navController.navigate("second") })
+        }
+        // Определяем второй экран
+        composable("second") {
+            AddDeviceScreen(onBackClick = onButtonClick)
+        }
+    }
     Column {
         CenterAlignedTopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
@@ -63,18 +76,16 @@ fun DeviceScreen() {
                     overflow = TextOverflow.Ellipsis
                 )
             },
-            navigationIcon = {
-                IconButton(onClick = { /* do something */ }) {
+            actions = {
+                IconButton(onClick = { }) {
                     Icon(
-                        imageVector = Icons.Filled.ArrowBack,
+                        imageVector = ImageVector.vectorResource(id = R.drawable.rounded_search_24),
                         contentDescription = "Localized description"
                     )
                 }
-            },
-            actions = {
-                IconButton(onClick = { /* do something */ }) {
+                IconButton(onClick = onButtonClick) {
                     Icon(
-                        imageVector = Icons.Filled.Menu,
+                        imageVector = ImageVector.vectorResource(id = R.drawable.rounded_add_circle_24),
                         contentDescription = "Localized description"
                     )
                 }
@@ -83,8 +94,7 @@ fun DeviceScreen() {
         )
         LazyColumn {
             items(deviceList) { device ->
-                ElevatedCardDeviceItem(title = device.name) {
-                }
+                DeviceListItem(device.name)
             }
         }
     }
@@ -105,76 +115,24 @@ fun createDummyDahuaDeviceList(): List<DahuaDevice> {
 }
 
 @Composable
-fun ElevatedCardDeviceItem(
-    title: String,
-    imageUrl: String = "null",
-    onEditClick: () -> Unit
-) {
-    ElevatedCard(
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 6.dp
-        ),
-        modifier = Modifier
-            .padding(8.dp)
-            .fillMaxWidth()
-            .height(IntrinsicSize.Min)
-    ) {
-        val emptyTiles = List(4) { index -> index }
-        Column {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(3f)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .weight(6f)
-                        .fillMaxHeight()
-                        .padding(8.dp)
-                ) {
-                    LazyRow(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(100.dp)
-                    ) {
-                        itemsIndexed(emptyTiles) { index, _ ->
-                            BlackTile(index = index)
-                        }
-                    }
+fun DeviceListItem(name: String) {
+    Column {
+        ListItem(
+            modifier = Modifier.clickable(onClick = {}),
+            headlineContent = {
+                CarouselCustom()
+            },
+            overlineContent = { Text(name, fontWeight = FontWeight.Bold) },
+            trailingContent = {
+                IconButton(onClick = { /*TODO*/ }) {
+                    Icon(
+                        ImageVector.vectorResource(id = R.drawable.rounded_more_horiz_24),
+                        contentDescription = "Localized description",
+                    )
                 }
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight(),
-                    horizontalAlignment = Alignment.End,
-                    verticalArrangement = Arrangement.Top
-                ) {
-                    IconButton(onClick = { /*TODO*/ }
-                    ) {
-                        Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "More")
-                    }
-                }
-            }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.Bottom
-            ) {
-                Text(
-                    text = title,
-                    style = TextStyle(
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.tertiary
-                    ),
-                    modifier = Modifier
-                        .padding(8.dp),
-                    textAlign = TextAlign.Center,
-                )
-            }
-
-        }
+            },
+        )
+        HorizontalDivider()
     }
 }
 
@@ -182,17 +140,51 @@ fun ElevatedCardDeviceItem(
 @Composable
 fun PreviewDeviceScreen() {
     VisionHComposeTheme {
-        DeviceScreen()
+//        DeviceScreen()
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun BlackTile(index: Int) {
-    val tileSize = 100.dp
-    Box(
-        modifier = Modifier
-            .size(tileSize)
-            .padding(horizontal = 4.dp)
-            .background(Color.Black)
-    )
+fun CarouselCustom() {
+    val pagerState = rememberPagerState(pageCount = {
+        4
+    })
+    HorizontalPager(
+        state = pagerState,
+        contentPadding = PaddingValues(horizontal = 32.dp),
+        pageSpacing = 10.dp
+    ) { page ->
+        Card(
+            modifier = Modifier
+                .size(width = 240.dp, height = 100.dp)
+                .graphicsLayer {
+                    val pageOffset = (
+                            (pagerState.currentPage - page) + pagerState
+                                .currentPageOffsetFraction
+                            ).absoluteValue
+
+                    alpha = lerp(
+                        start = 0.5f,
+                        stop = 1f,
+                        fraction = 1f - pageOffset.coerceIn(0f, 1f)
+                    )
+                }
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Bottom,
+                horizontalAlignment = Alignment.End
+            ) {
+                Text(
+                    text = "Cam ${page + 1}",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 10.sp,
+                    modifier = Modifier.padding(horizontal = 8.dp)
+                )
+            }
+
+        }
+    }
 }
