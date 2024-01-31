@@ -22,8 +22,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.visionhcompose.screen.AddDeviceScreen
 import com.example.visionhcompose.screen.ArchiveScreen
 import com.example.visionhcompose.screen.DeviceScreen
+import com.example.visionhcompose.screen.createDummyDahuaDeviceList
 import com.example.visionhcompose.ui.theme.VisionHComposeTheme
 
 class MainActivity : ComponentActivity() {
@@ -46,7 +51,15 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppContent() {
     var selectedItem by remember { mutableIntStateOf(0) }
-
+    val navController = rememberNavController()
+    NavHost(navController = navController, startDestination = "main") {
+        composable("main") {
+            DeviceScreen()
+        }
+        composable("second") {
+            AddDeviceScreen()
+        }
+    }
     data class NavigationItem(val label: String, val icon: ImageVector)
 
     val items = listOf(
@@ -87,8 +100,8 @@ fun AppContent() {
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             when (selectedItem) {
-//                0 -> DeviceScreen()
-                1 -> ArchiveScreen()
+                0 -> DeviceScreen()
+                1 -> AddDeviceScreen()
                 2 -> Text("Settings was selected")
             }
         }

@@ -34,35 +34,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.visionhcompose.R
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.example.visionhcompose.class_data.DahuaDevice
 import com.example.visionhcompose.ui.theme.VisionHComposeTheme
 import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DeviceScreen(onButtonClick: () -> Unit) {
+fun DeviceScreen() {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
-    val navController = rememberNavController()
     val deviceList by remember { mutableStateOf(createDummyDahuaDeviceList()) }
-    NavHost(navController = navController, startDestination = "main") {
-        // Определяем первый экран
-        composable("main") {
-            DeviceScreen(onButtonClick = { navController.navigate("second") })
-        }
-        // Определяем второй экран
-        composable("second") {
-            AddDeviceScreen(onBackClick = onButtonClick)
-        }
-    }
+
+
     Column {
         CenterAlignedTopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
@@ -83,7 +73,7 @@ fun DeviceScreen(onButtonClick: () -> Unit) {
                         contentDescription = "Localized description"
                     )
                 }
-                IconButton(onClick = onButtonClick) {
+                IconButton(onClick = {}) {
                     Icon(
                         imageVector = ImageVector.vectorResource(id = R.drawable.rounded_add_circle_24),
                         contentDescription = "Localized description"

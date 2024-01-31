@@ -15,15 +15,15 @@ import androidx.compose.ui.res.vectorResource
 import com.example.visionhcompose.R
 
 @Composable
-fun AddDeviceScreen(onBackClick: () -> Unit) {
+fun AddDeviceScreen() {
     Column {
-        AddDeviceTopAppBar(onBackClick = onBackClick)
+        AddDeviceTopAppBar()
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddDeviceTopAppBar(onBackClick: () -> Unit) {
+fun AddDeviceTopAppBar() {
     TopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
@@ -33,7 +33,7 @@ fun AddDeviceTopAppBar(onBackClick: () -> Unit) {
             Text("Editing device")
         },
         navigationIcon = {
-            IconButton(onClick = onBackClick ) {
+            IconButton(onClick = { } ) {
                 Icon(
                     imageVector = ImageVector.vectorResource(id = R.drawable.rounded_arrow_back_24),
                     contentDescription = "Localized description"
