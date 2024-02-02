@@ -1,20 +1,29 @@
 package com.example.visionhcompose.screen
 
+import android.bluetooth.BluetoothClass.Device
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItem
@@ -30,29 +39,30 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.visionhcompose.R
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.util.lerp
-import androidx.navigation.NavController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
+import androidx.navigation.NavHostController
 import com.example.visionhcompose.class_data.DahuaDevice
-import com.example.visionhcompose.ui.theme.VisionHComposeTheme
+import kotlinx.coroutines.launch
 import kotlin.math.absoluteValue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DeviceScreen() {
+fun DeviceScreen(navController: NavHostController) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior(rememberTopAppBarState())
     val deviceList by remember { mutableStateOf(createDummyDahuaDeviceList()) }
-
-
     Column {
         CenterAlignedTopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
@@ -67,13 +77,15 @@ fun DeviceScreen() {
                 )
             },
             actions = {
-                IconButton(onClick = { }) {
+                IconButton(onClick = {}) {
                     Icon(
                         imageVector = ImageVector.vectorResource(id = R.drawable.rounded_search_24),
                         contentDescription = "Localized description"
                     )
                 }
-                IconButton(onClick = {}) {
+                IconButton(onClick = {
+                    navController.navigate("addDevice")
+                }) {
                     Icon(
                         imageVector = ImageVector.vectorResource(id = R.drawable.rounded_add_circle_24),
                         contentDescription = "Localized description"
@@ -112,27 +124,21 @@ fun DeviceListItem(name: String) {
             headlineContent = {
                 CarouselCustom()
             },
-            overlineContent = { Text(name, fontWeight = FontWeight.Bold) },
-            trailingContent = {
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(
-                        ImageVector.vectorResource(id = R.drawable.rounded_more_horiz_24),
-                        contentDescription = "Localized description",
-                    )
+            overlineContent = {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(name, modifier = Modifier.weight(1f), fontWeight = FontWeight.Bold)
+                    Indicator(color = Color.Green)
                 }
-            },
+            }
         )
         HorizontalDivider()
     }
 }
 
-@Preview
-@Composable
-fun PreviewDeviceScreen() {
-    VisionHComposeTheme {
-//        DeviceScreen()
-    }
-}
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -177,4 +183,18 @@ fun CarouselCustom() {
 
         }
     }
+}
+
+
+@Composable
+fun Indicator(color: Color) {
+    Box(
+        modifier = Modifier
+            .size(8.dp)
+            .background(
+                color = color,
+                shape = CircleShape
+            )
+            .padding(8.dp)
+    )
 }
