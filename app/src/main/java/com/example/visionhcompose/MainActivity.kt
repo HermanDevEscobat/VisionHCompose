@@ -1,36 +1,35 @@
 package com.example.visionhcompose
 
-import com.example.visionhcompose.screen.SettingsScreen
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.unit.dp
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.visionhcompose.screen.AddDeviceScreen
-import com.example.visionhcompose.screen.ArchiveScreen
-import com.example.visionhcompose.screen.DeviceScreen
+import com.example.visionhcompose.class_data.BottomBarScreen
+import com.example.visionhcompose.class_data.BottomNavGraph
 import com.example.visionhcompose.ui.theme.VisionHComposeTheme
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -46,67 +45,53 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@SuppressLint("SuspiciousIndentation")
+@SuppressLint("SuspiciousIndentation", "UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AppContent() {
-    var selectedItem by remember { mutableIntStateOf(0) }
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "device" ){
-        composable("device"){ DeviceScreen(navController)}
-        composable("archive"){ ArchiveScreen() }
-        composable("settings"){ SettingsScreen() }
-        composable("addDevice"){ AddDeviceScreen() }
-    }
-    data class NavigationItem(val label: String, val icon: ImageVector)
-
     val items = listOf(
-        NavigationItem(
-            "Device",
-            ImageVector.vectorResource(id = R.drawable.rounded_camera_video_24)
-        ),
-        NavigationItem(
-            "Archive",
-            ImageVector.vectorResource(id = R.drawable.rounded_archive_24)
-        ),
-        NavigationItem(
-            "Settings",
-            ImageVector.vectorResource(id = R.drawable.rounded_settings_24)
-        )
+        BottomBarScreen.Device,
+        BottomBarScreen.Archive,
+        BottomBarScreen.Settings
     )
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
     Scaffold(
         bottomBar = {
-            BottomAppBar(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                contentColor = MaterialTheme.colorScheme.primary,
-            ) {
-                NavigationBar {
-                    items.forEachIndexed { index, item ->
-                        NavigationBarItem(
-                            icon = {
-                                Icon(
-                                    imageVector = item.icon,
-                                    contentDescription = item.label
-                                )
-                            },
-                            label = { Text(item.label) },
-                            selected = selectedItem == index,
-                            onClick = { selectedItem = index }
-                        )
-                    }
+            NavigationBar {
+                items.forEach { item ->
+                    AddItem(
+                        screen = item,
+                        currentDestination = currentDestination,
+                        navController = navController
+                    )
                 }
             }
         }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-            when (selectedItem) {
-                0 -> DeviceScreen(navController)
-                1 -> ArchiveScreen()
-                2 -> SettingsScreen()
+    ) {
+        BottomNavGraph(navController = navController)
+    }
+}
+
+@Composable
+fun RowScope.AddItem(
+    screen: BottomBarScreen,
+    currentDestination: NavDestination?,
+    navController: NavHostController
+) {
+    NavigationBarItem(
+        label = { Text(text = screen.title) },
+        icon = {
+            Icon(imageVector = ImageVector.vectorResource(id = screen.icon), contentDescription = "Nav icon")
+        },
+        selected = currentDestination?.hierarchy?.any {
+            it.route == screen.route
+        } == true,
+        onClick = {
+            navController.navigate(screen.route){
+                popUpTo(navController.graph.findStartDestination().id)
+                launchSingleTop = true
             }
         }
-    }
+    )
 }

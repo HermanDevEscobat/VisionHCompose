@@ -3,10 +3,10 @@ package com.example.visionhcompose.screen
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.material3.Text
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 
 @Composable
-fun AddDeviceScreen() {
+fun AddDeviceScreen(navController: NavHostController) {
     Column {
         AddDeviceView()
     }
