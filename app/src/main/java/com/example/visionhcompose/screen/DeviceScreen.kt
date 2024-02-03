@@ -49,19 +49,27 @@ import kotlin.math.absoluteValue
 @Composable
 @ExperimentalMaterial3Api
 @ExperimentalFoundationApi
-fun DeviceScreen(navController: NavHostController) {
-    Scaffold(topBar = {
-        TopAppBarDevice(navController)
-    }, content = { innerPadding ->
-        ContentDevice(innerPadding)
-    })
+fun DeviceScreen(navController: NavHostController, innerPaddingValues: PaddingValues) {
+    Scaffold(
+        modifier = Modifier
+            .padding(innerPaddingValues)
+            .fillMaxSize(),
+        topBar = {
+            TopAppBarDevice(navController)
+        },
+        content = { innerPadding ->
+            ContentDevice(innerPadding)
+        }
+    )
 }
 
 
 @Composable
 @ExperimentalMaterial3Api
 fun TopAppBarDevice(navController: NavHostController) {
-    TopAppBar(title = { Text(text = "Device") },
+    TopAppBar(
+        title = { Text("Device",
+            fontWeight = FontWeight.Bold ) },
         actions = {
             IconButton(onClick = {}) {
                 Icon(
@@ -83,7 +91,8 @@ fun TopAppBarDevice(navController: NavHostController) {
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color.Black,
             titleContentColor = Color.White
-        ))
+        )
+    )
 }
 
 @Composable

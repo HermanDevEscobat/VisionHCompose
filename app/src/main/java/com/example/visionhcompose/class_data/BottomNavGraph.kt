@@ -7,6 +7,9 @@ import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -17,7 +20,9 @@ import com.example.visionhcompose.screen.DeviceScreen
 import com.example.visionhcompose.screen.SettingsScreen
 
 @Composable
-fun BottomNavGraph(navController: NavHostController) {
+@ExperimentalFoundationApi
+@ExperimentalMaterial3Api
+fun BottomNavGraph(navController: NavHostController, innerPaddingValues: PaddingValues) {
     NavHost(
         navController = navController,
         startDestination = BottomBarScreen.Device.route
@@ -46,7 +51,7 @@ fun BottomNavGraph(navController: NavHostController) {
                 )
             }
         ) {
-            DeviceScreen(navController = navController)
+            DeviceScreen(navController = navController, innerPaddingValues)
 
         }
 
@@ -72,7 +77,7 @@ fun BottomNavGraph(navController: NavHostController) {
                     towards = AnimatedContentTransitionScope.SlideDirection.End
                 )
             }) {
-            ArchiveScreen(navController = navController)
+            ArchiveScreen(navController = navController, innerPaddingValues)
         }
 
         composable(route = BottomBarScreen.Settings.route,
@@ -97,7 +102,7 @@ fun BottomNavGraph(navController: NavHostController) {
                     towards = AnimatedContentTransitionScope.SlideDirection.End
                 )
             }) {
-            SettingsScreen(navController = navController)
+            SettingsScreen(navController = navController, innerPaddingValues)
         }
 
         composable(route = "add_device",
@@ -122,7 +127,7 @@ fun BottomNavGraph(navController: NavHostController) {
                     towards = AnimatedContentTransitionScope.SlideDirection.End
                 )
             }) {
-            AddDeviceScreen(navController = navController)
+            AddDeviceScreen(navController = navController, innerPaddingValues)
         }
     }
 }
