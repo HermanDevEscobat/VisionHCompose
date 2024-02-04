@@ -100,9 +100,7 @@ fun TopAppBarDevice(navController: NavHostController) {
 @ExperimentalFoundationApi
 fun ContentDevice(innerPaddingValues: PaddingValues) {
     val deviceList by remember { mutableStateOf(createDummyDahuaDeviceList()) }
-    val pagerState = rememberPagerState(pageCount = {
-        4
-    })
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -114,6 +112,9 @@ fun ContentDevice(innerPaddingValues: PaddingValues) {
                     ListItem(
                         modifier = Modifier.clickable(onClick = {}),
                         headlineContent = {
+                            val pagerState = rememberPagerState(pageCount = {
+                                4
+                            })
                             HorizontalPager(
                                 state = pagerState,
                                 contentPadding = PaddingValues(horizontal = 32.dp),
