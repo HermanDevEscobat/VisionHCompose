@@ -26,8 +26,8 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.visionhcompose.class_data.BottomBarScreen
-import com.example.visionhcompose.class_data.BottomNavGraph
+import com.example.visionhcompose.navigation.BottomBarItem
+import com.example.visionhcompose.navigation.BottomNavGraph
 import com.example.visionhcompose.ui.theme.VisionHComposeTheme
 
 class MainActivity : ComponentActivity() {
@@ -55,9 +55,9 @@ class MainActivity : ComponentActivity() {
 fun AppContent() {
     val navController = rememberNavController()
     val items = listOf(
-        BottomBarScreen.Device,
-        BottomBarScreen.Archive,
-        BottomBarScreen.Settings
+        BottomBarItem.Devices,
+        BottomBarItem.Archive,
+        BottomBarItem.Settings
     )
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -80,7 +80,7 @@ fun AppContent() {
 
 @Composable
 fun RowScope.AddItem(
-    screen: BottomBarScreen,
+    screen: BottomBarItem,
     currentDestination: NavDestination?,
     navController: NavHostController
 ) {

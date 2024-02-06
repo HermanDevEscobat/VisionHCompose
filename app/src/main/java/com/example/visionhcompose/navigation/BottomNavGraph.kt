@@ -1,4 +1,4 @@
-package com.example.visionhcompose.class_data
+package com.example.visionhcompose.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.EaseIn
@@ -16,7 +16,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.visionhcompose.screen.AddDeviceScreen
 import com.example.visionhcompose.screen.ArchiveScreen
-import com.example.visionhcompose.screen.DeviceScreen
+import com.example.visionhcompose.screen.DevicesScreen
 import com.example.visionhcompose.screen.SettingsScreen
 
 @Composable
@@ -25,10 +25,10 @@ import com.example.visionhcompose.screen.SettingsScreen
 fun BottomNavGraph(navController: NavHostController, innerPaddingValues: PaddingValues) {
     NavHost(
         navController = navController,
-        startDestination = BottomBarScreen.Device.route
+        startDestination = BottomBarItem.Devices.route
     ) {
         composable(
-            route = BottomBarScreen.Device.route,
+            route = BottomBarItem.Devices.route,
             enterTransition = {
                 fadeIn(
                     animationSpec = tween(
@@ -51,11 +51,11 @@ fun BottomNavGraph(navController: NavHostController, innerPaddingValues: Padding
                 )
             }
         ) {
-            DeviceScreen(navController = navController, innerPaddingValues)
+            DevicesScreen(navController = navController, innerPaddingValues)
 
         }
 
-        composable(route = BottomBarScreen.Archive.route,
+        composable(route = BottomBarItem.Archive.route,
             enterTransition = {
                 fadeIn(
                     animationSpec = tween(
@@ -80,7 +80,7 @@ fun BottomNavGraph(navController: NavHostController, innerPaddingValues: Padding
             ArchiveScreen(navController = navController, innerPaddingValues)
         }
 
-        composable(route = BottomBarScreen.Settings.route,
+        composable(route = BottomBarItem.Settings.route,
             enterTransition = {
                 fadeIn(
                     animationSpec = tween(

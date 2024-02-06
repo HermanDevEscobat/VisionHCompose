@@ -1,25 +1,25 @@
-package com.example.visionhcompose.class_data
+package com.example.visionhcompose.navigation
 
 import com.example.visionhcompose.R
 
-sealed class BottomBarScreen(
+sealed class BottomBarItem(
     val route: String,
     val title: String,
     val icon: Int
 ) {
-    data object Device : BottomBarScreen(
-        route = "device",
-        title = "Device",
+    data object Devices : BottomBarItem(
+        route = "devices",
+        title = "Devices",
         icon = R.drawable.rounded_camera_video_24
     )
 
-    data object Archive : BottomBarScreen(
+    data object Archive : BottomBarItem(
         route = "archive",
         title = "Archive",
         icon = R.drawable.rounded_archive_24
     )
 
-    data object Settings : BottomBarScreen(
+    data object Settings : BottomBarItem(
         route = "settings",
         title = "Settings",
         icon = R.drawable.rounded_settings_24

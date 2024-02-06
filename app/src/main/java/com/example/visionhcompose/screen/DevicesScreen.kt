@@ -10,14 +10,17 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Card
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,19 +40,17 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.util.lerp
 import androidx.navigation.NavHostController
-import com.example.visionhcompose.class_data.DahuaDevice
-import kotlin.math.absoluteValue
+import com.example.visionhcompose.data.Device
 
 @Composable
 @ExperimentalMaterial3Api
 @ExperimentalFoundationApi
-fun DeviceScreen(navController: NavHostController, innerPaddingValues: PaddingValues) {
+fun DevicesScreen(navController: NavHostController, innerPaddingValues: PaddingValues) {
     Scaffold(
         modifier = Modifier
             .padding(innerPaddingValues)
@@ -68,8 +69,12 @@ fun DeviceScreen(navController: NavHostController, innerPaddingValues: PaddingVa
 @ExperimentalMaterial3Api
 fun TopAppBarDevice(navController: NavHostController) {
     TopAppBar(
-        title = { Text("Device",
-            fontWeight = FontWeight.Bold ) },
+        title = {
+            Text(
+                "Devices",
+                fontWeight = FontWeight.Bold
+            )
+        },
         actions = {
             IconButton(onClick = {}) {
                 Icon(
@@ -99,7 +104,7 @@ fun TopAppBarDevice(navController: NavHostController) {
 @ExperimentalMaterial3Api
 @ExperimentalFoundationApi
 fun ContentDevice(innerPaddingValues: PaddingValues) {
-    val deviceList by remember { mutableStateOf(createDummyDahuaDeviceList()) }
+    val deviceList by remember { mutableStateOf(createDeviceList()) }
 
     Column(
         modifier = Modifier
@@ -109,49 +114,61 @@ fun ContentDevice(innerPaddingValues: PaddingValues) {
         LazyColumn {
             items(deviceList) { device ->
                 Column {
+                    val pagerState = rememberPagerState(pageCount = {
+                        4
+                    })
                     ListItem(
                         modifier = Modifier.clickable(onClick = {}),
                         headlineContent = {
-                            val pagerState = rememberPagerState(pageCount = {
-                                4
-                            })
-                            HorizontalPager(
-                                state = pagerState,
-                                contentPadding = PaddingValues(horizontal = 32.dp),
-                                pageSpacing = 10.dp
-                            ) { page ->
-                                Card(
-                                    modifier = Modifier
-                                        .size(width = 240.dp, height = 100.dp)
-                                        .graphicsLayer {
-                                            val pageOffset = (
-                                                    (pagerState.currentPage - page) + pagerState
-                                                        .currentPageOffsetFraction
-                                                    ).absoluteValue
 
-                                            alpha = lerp(
-                                                start = 0.5f,
-                                                stop = 1f,
-                                                fraction = 1f - pageOffset.coerceIn(0f, 1f)
-                                            )
-                                        }
-                                ) {
-                                    Column(
-                                        modifier = Modifier
-                                            .fillMaxSize(),
-                                        verticalArrangement = Arrangement.Bottom,
-                                        horizontalAlignment = Alignment.End
-                                    ) {
-                                        Text(
-                                            text = "Cam ${page + 1}",
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 10.sp,
-                                            modifier = Modifier.padding(horizontal = 8.dp)
+                            HorizontalPager(
+                                modifier = Modifier.padding(vertical = 4.dp),
+                                state = pagerState,
+                                pageSpacing = 8.dp
+                            ) { page ->
+                                Box(
+                                    modifier = Modifier
+                                        .clip(RoundedCornerShape(8.dp))
+                                        .fillMaxWidth()
+                                        .background(Color.Black)
+                                        .height(150.dp),
+                                    content = {
+                                        Column(
+                                            modifier = Modifier
+                                                .fillMaxSize(),
+                                            content = {
+                                                Row(modifier = Modifier.fillMaxSize()
+                                                    .weight(1f)){}
+                                                Row(modifier = Modifier.fillMaxSize()
+                                                    .weight(1f),
+                                                    horizontalArrangement = Arrangement.Center,
+                                                    verticalAlignment = Alignment.CenterVertically){
+                                                    Text(
+                                                        text = "NO SIGNAL",
+                                                        fontWeight = FontWeight.Bold,
+                                                        color = Color.White,
+                                                        fontSize = 16.sp,
+                                                        modifier = Modifier.padding(horizontal = 8.dp)
+                                                    )
+                                                }
+                                                Row(modifier = Modifier.fillMaxSize()
+                                                    .weight(1f),
+                                                    horizontalArrangement = Arrangement.End,
+                                                    verticalAlignment = Alignment.CenterVertically){
+                                                    Text(
+                                                        text = "Cam ${page + 1}",
+                                                        fontWeight = FontWeight.Bold,
+                                                        color = Color.White,
+                                                        fontSize = 10.sp,
+                                                        modifier = Modifier.padding(4.dp)
+                                                    )
+                                                }
+                                            }
                                         )
                                     }
-
-                                }
+                                )
                             }
+
                         },
                         overlineContent = {
                             Row(
@@ -168,11 +185,29 @@ fun ContentDevice(innerPaddingValues: PaddingValues) {
                                     modifier = Modifier
                                         .size(8.dp)
                                         .background(
-                                            color = Color.Green,
+                                            color = Color.Red,
                                             shape = CircleShape
                                         )
                                         .padding(8.dp)
                                 )
+                            }
+                        }, supportingContent = {
+                            Row(
+                                Modifier.wrapContentHeight()
+                                    .fillMaxWidth()
+                                    .align(Alignment.CenterHorizontally),
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+                                repeat(pagerState.pageCount) { iteration ->
+                                    val color = if (pagerState.currentPage == iteration) Color.DarkGray else Color.LightGray
+                                    Box(
+                                        modifier = Modifier
+                                            .padding(2.dp)
+                                            .clip(CircleShape)
+                                            .background(color)
+                                            .size(10.dp)
+                                    )
+                                }
                             }
                         }
                     )
@@ -184,10 +219,10 @@ fun ContentDevice(innerPaddingValues: PaddingValues) {
 }
 
 
-fun createDummyDahuaDeviceList(): List<DahuaDevice> {
-    val deviceList = mutableListOf<DahuaDevice>()
-    repeat(15) { index ->
-        val device = DahuaDevice(
+fun createDeviceList(): List<Device> {
+    val deviceList = mutableListOf<Device>()
+    repeat(7) { index ->
+        val device = Device(
             name = "Dahua Camera ${index + 1}",
             model = "IPC-HDW1234",
             serialNumber = "123456789-${index + 1}",
