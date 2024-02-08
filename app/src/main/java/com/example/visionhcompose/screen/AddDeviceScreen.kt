@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -41,13 +42,23 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.visionhcompose.R
+import com.example.visionhcompose.data.Device
+import com.example.visionhcompose.data.DeviceDao
+import com.example.visionhcompose.data.DeviceDatabase
+import com.example.visionhcompose.data.DeviceViewModel
 
 var isFormFilled by mutableStateOf(false)
 
 @Composable
 @ExperimentalMaterial3Api
 @ExperimentalFoundationApi
-fun AddDeviceScreen(navController: NavHostController, innerPaddingValues: PaddingValues) {
+fun AddDeviceScreen(
+    navController: NavHostController,
+    innerPaddingValues: PaddingValues
+) {
+    val applicationContext = LocalContext.current.applicationContext
+    val dao = DeviceDatabase.getDatabase(applicationContext).deviceDao()
+    val deviceViewModel = DeviceViewModel(dao)
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -192,7 +203,8 @@ fun ContentAddDevice(innerPaddingValues: PaddingValues) {
                     .fillMaxWidth()
                     .height(OutlinedTextFieldDefaults.MinHeight)
                     .align(Alignment.CenterHorizontally),
-                onClick = { /*TODO*/ }) {
+                onClick = {
+                }) {
                 Icon(
                     imageVector = ImageVector.vectorResource(id = R.drawable.rounded_add_24),
                     contentDescription = "Content description",
