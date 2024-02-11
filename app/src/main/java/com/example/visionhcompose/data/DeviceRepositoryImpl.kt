@@ -2,7 +2,7 @@ package com.example.visionhcompose.data
 
 import kotlinx.coroutines.flow.Flow
 
-class DeviceOfflineRepository(private val deviceDao: DeviceDao) : DevicesRepository {
+class DeviceRepositoryImpl(private val deviceDao: DeviceDao) : DeviceRepository {
 
     override fun getAllDevicesStream(): Flow<List<Device>> = deviceDao.getAllDevices()
     override fun getDeviceStream(id: Int): Flow<Device?> = deviceDao.getDevice(id)

@@ -2,7 +2,7 @@ package com.example.visionhcompose.data
 
 import kotlinx.coroutines.flow.Flow
 
-interface DevicesRepository {
+interface DeviceRepository {
     fun getAllDevicesStream(): Flow<List<Device>>
     fun getDeviceStream(id: Int): Flow<Device?>
     suspend fun insertDevice(device: Device)

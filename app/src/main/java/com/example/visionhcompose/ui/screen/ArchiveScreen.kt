@@ -1,4 +1,4 @@
-package com.example.visionhcompose.screen
+package com.example.visionhcompose.ui.screen
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.ExperimentalFoundationApi

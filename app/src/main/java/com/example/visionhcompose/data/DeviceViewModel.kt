@@ -1,13 +1,12 @@
 package com.example.visionhcompose.data
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
 
-class DeviceViewModel(private val deviceDao: DeviceDao) : ViewModel() {
-    fun insertDevice(device: Device) {
-        viewModelScope.launch {
-            deviceDao.insert(device)
-        }
+
+class DeviceViewModel() : ViewModel() {
+    companion object {
+        private const val TIMEOUT_MILLIS = 5_000L
     }
 }
+
+data class DeviceUiState(val deviceList: List<Device> = listOf())

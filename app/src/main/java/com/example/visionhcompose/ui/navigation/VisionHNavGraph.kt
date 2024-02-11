@@ -1,4 +1,4 @@
-package com.example.visionhcompose.navigation
+package com.example.visionhcompose.ui.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.EaseIn
@@ -14,15 +14,18 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.visionhcompose.screen.AddDeviceScreen
-import com.example.visionhcompose.screen.ArchiveScreen
-import com.example.visionhcompose.screen.DevicesScreen
-import com.example.visionhcompose.screen.SettingsScreen
+import com.example.visionhcompose.ui.screen.AddDeviceScreen
+import com.example.visionhcompose.ui.screen.ArchiveScreen
+import com.example.visionhcompose.ui.screen.DevicesScreen
+import com.example.visionhcompose.ui.screen.SettingsScreen
 
 @Composable
 @ExperimentalFoundationApi
 @ExperimentalMaterial3Api
-fun BottomNavGraph(navController: NavHostController, innerPaddingValues: PaddingValues) {
+fun BottomNavGraph(
+    navController: NavHostController,
+    innerPaddingValues: PaddingValues
+) {
     NavHost(
         navController = navController,
         startDestination = BottomBarItem.Devices.route

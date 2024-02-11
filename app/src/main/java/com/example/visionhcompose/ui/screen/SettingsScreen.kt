@@ -1,4 +1,4 @@
-package com.example.visionhcompose.screen
+package com.example.visionhcompose.ui.screen
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable

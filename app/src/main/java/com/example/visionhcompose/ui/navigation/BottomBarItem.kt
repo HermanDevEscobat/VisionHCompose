@@ -1,4 +1,4 @@
-package com.example.visionhcompose.navigation
+package com.example.visionhcompose.ui.navigation
 
 import com.example.visionhcompose.R
 

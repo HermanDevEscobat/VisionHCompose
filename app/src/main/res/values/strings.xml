@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">VisionHCompose</string>
+    <string name="app_name">VisionH</string>
+    <string name="no_item_description">NO DEVICES ADDED</string>
+    <string name="button_add_device">Add</string>
 </resources>

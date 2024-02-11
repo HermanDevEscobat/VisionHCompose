@@ -1,4 +1,4 @@
-package com.example.visionhcompose.screen
+package com.example.visionhcompose.ui.screen
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
@@ -13,9 +13,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -32,7 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -42,10 +44,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.visionhcompose.R
-import com.example.visionhcompose.data.Device
-import com.example.visionhcompose.data.DeviceDao
-import com.example.visionhcompose.data.DeviceDatabase
-import com.example.visionhcompose.data.DeviceViewModel
+import com.example.visionhcompose.data.DeviceUiState
 
 var isFormFilled by mutableStateOf(false)
 
@@ -56,9 +55,6 @@ fun AddDeviceScreen(
     navController: NavHostController,
     innerPaddingValues: PaddingValues
 ) {
-    val applicationContext = LocalContext.current.applicationContext
-    val dao = DeviceDatabase.getDatabase(applicationContext).deviceDao()
-    val deviceViewModel = DeviceViewModel(dao)
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -66,7 +62,7 @@ fun AddDeviceScreen(
         topBar = {
             TopAppBarAddDevice(navController)
         },
-        content = { innerPadding -> ContentAddDevice(innerPadding) }
+        content = { innerPadding -> ContentAddDevice(innerPadding, navController, ) }
     )
 }
 
@@ -95,7 +91,13 @@ fun TopAppBarAddDevice(navController: NavHostController) {
 @Composable
 @ExperimentalMaterial3Api
 @ExperimentalFoundationApi
-fun ContentAddDevice(innerPaddingValues: PaddingValues) {
+fun ContentAddDevice(
+    innerPaddingValues: PaddingValues,
+    deviceUiState: DeviceUiState,
+    onDeviceValueChange: (DeviceDetails) -> Unit,
+    navController: NavHostController,
+    onAddClick: () -> Unit
+) {
     var deviceName by rememberSaveable { mutableStateOf("") }
     var serialNumber by rememberSaveable { mutableStateOf("") }
     var userName by rememberSaveable { mutableStateOf("") }
@@ -104,7 +106,7 @@ fun ContentAddDevice(innerPaddingValues: PaddingValues) {
 
     fun checkForm() {
         isFormFilled =
-            deviceName.isNotEmpty() && serialNumber.isNotEmpty() && userName.isNotEmpty() && password.isNotEmpty()
+            deviceName.isNotBlank() && serialNumber.isNotBlank() && userName.isNotBlank() && password.isNotBlank()
     }
     Column(
         modifier = Modifier
@@ -115,7 +117,7 @@ fun ContentAddDevice(innerPaddingValues: PaddingValues) {
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(8.dp),
+                .padding(horizontal = 8.dp),
         ) {
             OutlinedTextField(
                 value = deviceName,
@@ -124,7 +126,7 @@ fun ContentAddDevice(innerPaddingValues: PaddingValues) {
                     checkForm()
                 },
                 label = { Text("Device name") },
-                shape = RoundedCornerShape(100.dp),
+                shape = MaterialTheme.shapes.small,
                 maxLines = 1,
                 singleLine = true,
                 isError = deviceName.length > 30,
@@ -141,7 +143,7 @@ fun ContentAddDevice(innerPaddingValues: PaddingValues) {
                     checkForm()
                 },
                 label = { Text("Serial number") },
-                shape = RoundedCornerShape(100.dp),
+                shape = MaterialTheme.shapes.small,
                 maxLines = 1,
                 singleLine = true,
                 isError = deviceName.length > 30,
@@ -158,7 +160,7 @@ fun ContentAddDevice(innerPaddingValues: PaddingValues) {
                     checkForm()
                 },
                 label = { Text("User name") },
-                shape = RoundedCornerShape(100.dp),
+                shape = MaterialTheme.shapes.small,
                 maxLines = 1,
                 singleLine = true,
                 isError = deviceName.length > 30,
@@ -174,7 +176,7 @@ fun ContentAddDevice(innerPaddingValues: PaddingValues) {
                     checkForm()
                 },
                 label = { Text("Password") },
-                shape = RoundedCornerShape(100.dp),
+                shape = MaterialTheme.shapes.small,
                 maxLines = 1,
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
@@ -198,20 +200,21 @@ fun ContentAddDevice(innerPaddingValues: PaddingValues) {
                 }
             )
             Spacer(modifier = Modifier.height(8.dp))
-            OutlinedButton(
+            Button(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(OutlinedTextFieldDefaults.MinHeight)
                     .align(Alignment.CenterHorizontally),
-                onClick = {
-                }) {
+                shape = MaterialTheme.shapes.small,
+                enabled = deviceUiState.isEntryValid,
+                onClick = onAddClick) {
                 Icon(
                     imageVector = ImageVector.vectorResource(id = R.drawable.rounded_add_24),
                     contentDescription = "Content description",
                     tint = Color.Black
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Add", color = Color.Black)
+                Text(stringResource(id = R.string.button_add_device), color = Color.Black)
             }
         }
     }
