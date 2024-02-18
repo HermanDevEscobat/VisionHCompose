@@ -1,4 +1,4 @@
-package com.example.visionhcompose.ui.screen
+package com.example.visionhcompose.ui.screen.add_device
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -18,7 +17,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
@@ -44,7 +42,9 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.visionhcompose.R
-import com.example.visionhcompose.data.DeviceUiState
+import com.example.visionhcompose.ui.AppViewModelProvider
+import com.example.visionhcompose.ui.screen.devices.DevicesUiState
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 var isFormFilled by mutableStateOf(false)
 
@@ -53,7 +53,8 @@ var isFormFilled by mutableStateOf(false)
 @ExperimentalFoundationApi
 fun AddDeviceScreen(
     navController: NavHostController,
-    innerPaddingValues: PaddingValues
+    innerPaddingValues: PaddingValues,
+    viewModel: AddDeviceViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     Scaffold(
         modifier = Modifier
@@ -62,7 +63,7 @@ fun AddDeviceScreen(
         topBar = {
             TopAppBarAddDevice(navController)
         },
-        content = { innerPadding -> ContentAddDevice(innerPadding, navController, ) }
+        content = { innerPadding -> ContentAddDevice(innerPadding, navController, viewModel) }
     )
 }
 
@@ -93,8 +94,8 @@ fun TopAppBarAddDevice(navController: NavHostController) {
 @ExperimentalFoundationApi
 fun ContentAddDevice(
     innerPaddingValues: PaddingValues,
-    deviceUiState: DeviceUiState,
-    onDeviceValueChange: (DeviceDetails) -> Unit,
+    deviceUiState: DevicesUiState,
+    onDeviceValueChange: (DevicesDetails) -> Unit,
     navController: NavHostController,
     onAddClick: () -> Unit
 ) {
@@ -207,7 +208,8 @@ fun ContentAddDevice(
                     .align(Alignment.CenterHorizontally),
                 shape = MaterialTheme.shapes.small,
                 enabled = deviceUiState.isEntryValid,
-                onClick = onAddClick) {
+                onClick = onAddClick
+            ) {
                 Icon(
                     imageVector = ImageVector.vectorResource(id = R.drawable.rounded_add_24),
                     contentDescription = "Content description",

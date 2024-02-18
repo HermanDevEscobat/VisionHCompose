@@ -1,4 +1,4 @@
-package com.example.visionhcompose.ui.screen
+package com.example.visionhcompose.ui.screen.archive
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun ImageScreen() {
+fun VideoScreen() {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -18,13 +18,13 @@ fun ImageScreen() {
     ) {
         Text(
             modifier = Modifier.align(Alignment.CenterHorizontally),
-            text = "Hello ImageScreen!"
+            text = "Hello VideoScreen!"
         )
     }
 }
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun PreviewImageScreen() {
-    ImageScreen()
+fun PreviewVideoScreen() {
+    VideoScreen()
 }

@@ -14,10 +14,10 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.visionhcompose.ui.screen.AddDeviceScreen
-import com.example.visionhcompose.ui.screen.ArchiveScreen
-import com.example.visionhcompose.ui.screen.DevicesScreen
-import com.example.visionhcompose.ui.screen.SettingsScreen
+import com.example.visionhcompose.ui.screen.add_device.AddDeviceScreen
+import com.example.visionhcompose.ui.screen.archive.ArchiveScreen
+import com.example.visionhcompose.ui.screen.devices.DevicesScreen
+import com.example.visionhcompose.ui.screen.settings.SettingsScreen
 
 @Composable
 @ExperimentalFoundationApi

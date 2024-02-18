@@ -6,17 +6,17 @@ import android.content.Context
 import androidx.room.Room
 
 @Database(entities = [Device::class], version = 1, exportSchema = false)
-abstract class DeviceDatabase : RoomDatabase() {
+abstract class DevicesDatabase : RoomDatabase() {
 
-    abstract fun deviceDao(): DeviceDao
+    abstract fun deviceDao(): DevicesDao
 
     companion object {
         @Volatile
-        private var Instance: DeviceDatabase? = null
+        private var Instance: DevicesDatabase? = null
 
-        fun getDatabase(context: Context): DeviceDatabase {
+        fun getDatabase(context: Context): DevicesDatabase {
             return Instance ?: synchronized(this) {
-                Room.databaseBuilder(context, DeviceDatabase::class.java, "device_database")
+                Room.databaseBuilder(context, DevicesDatabase::class.java, "device_database")
                     .build()
                     .also { Instance = it }
             }

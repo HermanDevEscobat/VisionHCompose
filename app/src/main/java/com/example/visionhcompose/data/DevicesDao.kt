@@ -6,15 +6,14 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
-import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface DeviceDao {
-    @Query("SELECT * from device_table ORDER BY name ASC")
+interface DevicesDao {
+    @Query("SELECT * from device_database ORDER BY name ASC")
     fun getAllDevices(): Flow<List<Device>>
 
-    @Query("SELECT * from device_table WHERE id = :id")
+    @Query("SELECT * from device_database WHERE id = :id")
     fun getDevice(id: Int): Flow<Device>
 
     @Update

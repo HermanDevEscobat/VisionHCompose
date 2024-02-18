@@ -3,11 +3,11 @@ package com.example.visionhcompose.data
 import android.content.Context
 
 interface AppContainer {
-    val deviceRepository: DeviceRepository
+    val deviceRepository: DevicesRepository
 }
 
 class AppDataContainer(private val context: Context) : AppContainer {
-    override val deviceRepository: DeviceRepository by lazy {
-        DeviceRepositoryImpl(DeviceDatabase.getDatabase(context).deviceDao())
+    override val deviceRepository: DevicesRepository by lazy {
+        DevicesRepositoryImpl(DevicesDatabase.getDatabase(context).deviceDao())
     }
 }
