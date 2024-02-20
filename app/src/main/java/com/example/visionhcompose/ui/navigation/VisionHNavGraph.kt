@@ -130,7 +130,11 @@ fun BottomNavGraph(
                     towards = AnimatedContentTransitionScope.SlideDirection.End
                 )
             }) {
-            AddDeviceScreen(navController = navController, innerPaddingValues)
+            AddDeviceScreen(
+                navigateBack = { navController.popBackStack() },
+                navController = navController,
+                innerPaddingValues
+            )
         }
     }
 }

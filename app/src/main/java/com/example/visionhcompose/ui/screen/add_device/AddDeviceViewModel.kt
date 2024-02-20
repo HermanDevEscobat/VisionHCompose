@@ -20,7 +20,7 @@ class AddDeviceViewModel(private val devicesRepository: DevicesRepository) : Vie
             )
     }
 
-    suspend fun saveItem() {
+    suspend fun saveDevice() {
         if (validateInput()) {
             devicesRepository.insertDevice(deviceUiState.deviceDetails.toDevice())
         }
@@ -28,7 +28,7 @@ class AddDeviceViewModel(private val devicesRepository: DevicesRepository) : Vie
 
     private fun validateInput(uiState: DeviceDetails = deviceUiState.deviceDetails): Boolean {
         return with(uiState) {
-            name.isNotBlank() && price.isNotBlank() && quantity.isNotBlank()
+            name.isNotBlank() && serialNumber.isNotBlank() && userName.isNotBlank() && password.isNotBlank()
         }
     }
 }
@@ -41,27 +41,23 @@ data class DeviceUiState(
 data class DeviceDetails(
     val id: Int = 0,
     val name: String = "",
-    val price: String = "",
-    val quantity: String = "",
+    val serialNumber: String = "",
+    val userName: String = "",
+    val password: String = ""
 )
 
 fun DeviceDetails.toDevice(): Device = Device(
     id = id,
     name = name,
-    price = price.toDoubleOrNull() ?: 0.0,
-    quantity = quantity.toIntOrNull() ?: 0
-)
-
-fun Device.formatedPrice(): String {
-    return NumberFormat.getCurrencyInstance().format(price)
-}
-
-fun Device.toItemUiState(isEntryValid: Boolean = false): DeviceUiState = DeviceUiState(
-    deviceDetails = this.toDeviceDetails(),
-    isEntryValid = isEntryValid
+    serialNumber = serialNumber,
+    userName = userName,
+    password = password
 )
 
 fun Device.toDeviceDetails(): DeviceDetails = DeviceDetails(
     id = id,
     name = name,
+    serialNumber = serialNumber,
+    userName = userName,
+    password = password
 )

@@ -1,17 +1,13 @@
 package com.example.visionhcompose.ui
 
 
-import android.app.Application
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
-import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.visionhcompose.VisionHApplication
-//import com.example.inventory.ui.item.ItemDetailsViewModel
-//import com.example.inventory.ui.item.ItemEditViewModel
-//import com.example.inventory.ui.item.ItemEntryViewModel
-import com.example.visionhcompose.data.DeviceViewModel
+import com.example.visionhcompose.ui.screen.add_device.AddDeviceViewModel
+import com.example.visionhcompose.ui.screen.devices.DevicesViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
@@ -21,9 +17,9 @@ object AppViewModelProvider {
 //            )
 //        }
 //        // Initializer for ItemEntryViewModel
-//        initializer {
-//            DeviceEntryViewModel(inventoryApplication().container.deviceRepository)
-//        }
+        initializer {
+            AddDeviceViewModel(visionhApplication().container.devicesRepository)
+        }
 //
 //        // Initializer for ItemDetailsViewModel
 //        initializer {
@@ -33,7 +29,7 @@ object AppViewModelProvider {
 //        }
 
         initializer {
-            DeviceViewModel()
+            DevicesViewModel()
         }
     }
 }

@@ -3,7 +3,7 @@ package com.example.visionhcompose.data
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "devices_table")
+@Entity(tableName = "devices")
 data class Device(
     val name: String = "",
     val serialNumber: String = "",

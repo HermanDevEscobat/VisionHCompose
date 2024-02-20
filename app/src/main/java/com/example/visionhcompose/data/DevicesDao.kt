@@ -10,10 +10,10 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface DevicesDao {
-    @Query("SELECT * from device_database ORDER BY name ASC")
+    @Query("SELECT * from devices ORDER BY name ASC")
     fun getAllDevices(): Flow<List<Device>>
 
-    @Query("SELECT * from device_database WHERE id = :id")
+    @Query("SELECT * from devices WHERE id = :id")
     fun getDevice(id: Int): Flow<Device>
 
     @Update

@@ -26,12 +26,14 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -45,6 +47,7 @@ import com.example.visionhcompose.R
 import com.example.visionhcompose.ui.AppViewModelProvider
 import com.example.visionhcompose.ui.screen.devices.DevicesUiState
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.launch
 
 var isFormFilled by mutableStateOf(false)
 
@@ -52,10 +55,12 @@ var isFormFilled by mutableStateOf(false)
 @ExperimentalMaterial3Api
 @ExperimentalFoundationApi
 fun AddDeviceScreen(
+    navigateBack: () -> Unit,
     navController: NavHostController,
     innerPaddingValues: PaddingValues,
     viewModel: AddDeviceViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+    val coroutineScope = rememberCoroutineScope()
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
@@ -63,7 +68,17 @@ fun AddDeviceScreen(
         topBar = {
             TopAppBarAddDevice(navController)
         },
-        content = { innerPadding -> ContentAddDevice(innerPadding, navController, viewModel) }
+        content = { innerPadding -> ContentAddDevice(
+            deviceUiState = viewModel.deviceUiState,
+            onDeviceValueChange = viewModel::updateUiState,
+            onAddClick = {
+                coroutineScope.launch {
+                    viewModel.saveDevice()
+                    navigateBack()
+                }
+            },
+            modifier = Modifier.padding(innerPadding)
+        ) }
     )
 }
 
@@ -93,11 +108,10 @@ fun TopAppBarAddDevice(navController: NavHostController) {
 @ExperimentalMaterial3Api
 @ExperimentalFoundationApi
 fun ContentAddDevice(
-    innerPaddingValues: PaddingValues,
-    deviceUiState: DevicesUiState,
-    onDeviceValueChange: (DevicesDetails) -> Unit,
-    navController: NavHostController,
-    onAddClick: () -> Unit
+    deviceUiState: DeviceUiState,
+    onDeviceValueChange: (DeviceDetails) -> Unit,
+    onAddClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var deviceName by rememberSaveable { mutableStateOf("") }
     var serialNumber by rememberSaveable { mutableStateOf("") }
@@ -110,9 +124,7 @@ fun ContentAddDevice(
             deviceName.isNotBlank() && serialNumber.isNotBlank() && userName.isNotBlank() && password.isNotBlank()
     }
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(innerPaddingValues)
+        modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium))
     ) {
         Column(
             modifier = Modifier
