@@ -54,6 +54,11 @@ fun DeviceDetails.toDevice(): Device = Device(
     password = password
 )
 
+fun Device.toDeviceUiState(isEntryValid: Boolean = false): DeviceUiState = DeviceUiState(
+    deviceDetails = this.toDeviceDetails(),
+    isEntryValid = isEntryValid
+)
+
 fun Device.toDeviceDetails(): DeviceDetails = DeviceDetails(
     id = id,
     name = name,

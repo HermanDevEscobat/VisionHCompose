@@ -49,8 +49,6 @@ import com.example.visionhcompose.ui.screen.devices.DevicesUiState
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
 
-var isFormFilled by mutableStateOf(false)
-
 @Composable
 @ExperimentalMaterial3Api
 @ExperimentalFoundationApi
@@ -68,17 +66,20 @@ fun AddDeviceScreen(
         topBar = {
             TopAppBarAddDevice(navController)
         },
-        content = { innerPadding -> ContentAddDevice(
-            deviceUiState = viewModel.deviceUiState,
-            onDeviceValueChange = viewModel::updateUiState,
-            onAddClick = {
-                coroutineScope.launch {
-                    viewModel.saveDevice()
-                    navigateBack()
-                }
-            },
-            modifier = Modifier.padding(innerPadding)
-        ) }
+        content = { innerPadding ->
+            ContentAddDevice(
+                deviceDetails = viewModel.deviceUiState.deviceDetails,
+                deviceUiState = viewModel.deviceUiState,
+                onValueChange = viewModel::updateUiState,
+                onAddClick = {
+                    coroutineScope.launch {
+                        viewModel.saveDevice()
+                        navigateBack()
+                    }
+                },
+                modifier = Modifier.padding(innerPadding)
+            )
+        }
     )
 }
 
@@ -109,20 +110,15 @@ fun TopAppBarAddDevice(navController: NavHostController) {
 @ExperimentalFoundationApi
 fun ContentAddDevice(
     deviceUiState: DeviceUiState,
-    onDeviceValueChange: (DeviceDetails) -> Unit,
+    deviceDetails: DeviceDetails,
+    onValueChange: (DeviceDetails) -> Unit = {},
     onAddClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var deviceName by rememberSaveable { mutableStateOf("") }
-    var serialNumber by rememberSaveable { mutableStateOf("") }
-    var userName by rememberSaveable { mutableStateOf("") }
-    var password by rememberSaveable { mutableStateOf("") }
+//    var deviceName by rememberSaveable { mutableStateOf("") }
     var passwordHidden by rememberSaveable { mutableStateOf(true) }
 
-    fun checkForm() {
-        isFormFilled =
-            deviceName.isNotBlank() && serialNumber.isNotBlank() && userName.isNotBlank() && password.isNotBlank()
-    }
+
     Column(
         modifier = modifier.padding(dimensionResource(id = R.dimen.padding_medium))
     ) {
@@ -133,16 +129,13 @@ fun ContentAddDevice(
                 .padding(horizontal = 8.dp),
         ) {
             OutlinedTextField(
-                value = deviceName,
-                onValueChange = {
-                    deviceName = it
-                    checkForm()
-                },
+                value = deviceDetails.name,
+                onValueChange = { onValueChange(deviceDetails.copy(name = it)) },
                 label = { Text("Device name") },
                 shape = MaterialTheme.shapes.small,
                 maxLines = 1,
                 singleLine = true,
-                isError = deviceName.length > 30,
+//                isError = deviceName.length > 30,
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Next
@@ -150,16 +143,13 @@ fun ContentAddDevice(
 
             )
             OutlinedTextField(
-                value = serialNumber,
-                onValueChange = {
-                    serialNumber = it
-                    checkForm()
-                },
+                value = deviceDetails.serialNumber,
+                onValueChange = { onValueChange(deviceDetails.copy(serialNumber = it)) },
                 label = { Text("Serial number") },
                 shape = MaterialTheme.shapes.small,
                 maxLines = 1,
                 singleLine = true,
-                isError = deviceName.length > 30,
+//                isError = deviceName.length > 30,
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Next
@@ -167,27 +157,21 @@ fun ContentAddDevice(
 
             )
             OutlinedTextField(
-                value = userName,
-                onValueChange = {
-                    userName = it
-                    checkForm()
-                },
+                value = deviceDetails.userName,
+                onValueChange = { onValueChange(deviceDetails.copy(userName = it)) },
                 label = { Text("User name") },
                 shape = MaterialTheme.shapes.small,
                 maxLines = 1,
                 singleLine = true,
-                isError = deviceName.length > 30,
+//                isError = deviceName.length > 30,
                 modifier = Modifier.fillMaxWidth(),
                 keyboardOptions = KeyboardOptions(
                     imeAction = ImeAction.Next
                 )
             )
             OutlinedTextField(
-                value = password,
-                onValueChange = {
-                    password = it
-                    checkForm()
-                },
+                value = deviceDetails.password,
+                onValueChange = { onValueChange(deviceDetails.copy(password = it)) },
                 label = { Text("Password") },
                 shape = MaterialTheme.shapes.small,
                 maxLines = 1,
@@ -214,13 +198,13 @@ fun ContentAddDevice(
             )
             Spacer(modifier = Modifier.height(8.dp))
             Button(
+                onClick = onAddClick,
+                enabled = deviceUiState.isEntryValid,
+                shape = MaterialTheme.shapes.small,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(OutlinedTextFieldDefaults.MinHeight)
                     .align(Alignment.CenterHorizontally),
-                shape = MaterialTheme.shapes.small,
-                enabled = deviceUiState.isEntryValid,
-                onClick = onAddClick
             ) {
                 Icon(
                     imageVector = ImageVector.vectorResource(id = R.drawable.rounded_add_24),

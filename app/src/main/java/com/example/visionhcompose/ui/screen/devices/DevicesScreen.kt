@@ -60,7 +60,7 @@ fun DevicesScreen(navController: NavHostController, innerPaddingValues: PaddingV
         },
         content = { innerPadding ->
             DeviceBody(
-                itemList = listOf(),
+                deviceList = listOf(),
                 onItemClick = {},
                 modifier = Modifier
                     .padding(innerPadding)
@@ -109,14 +109,14 @@ fun TopAppBarDevice(navController: NavHostController) {
 @ExperimentalMaterial3Api
 @ExperimentalFoundationApi
 private fun DeviceBody(
-    itemList: List<Device>, onItemClick: (Int) -> Unit, modifier: Modifier = Modifier
+    deviceList: List<Device>, onItemClick: (Int) -> Unit, modifier: Modifier = Modifier
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = modifier
     ) {
-        if (itemList.isEmpty()) {
+        if (deviceList.isEmpty()) {
             Box(
                 modifier = Modifier
                     .padding(dimensionResource(id = R.dimen.padding_small))
@@ -138,7 +138,7 @@ private fun DeviceBody(
             }
         } else {
             DeviceList(
-                itemList = itemList,
+                deviceList = deviceList,
                 onItemClick = { onItemClick(it.id) },
                 modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_small))
             )
@@ -150,10 +150,10 @@ private fun DeviceBody(
 @ExperimentalFoundationApi
 @ExperimentalMaterial3Api
 private fun DeviceList(
-    itemList: List<Device>, onItemClick: (Device) -> Unit, modifier: Modifier = Modifier
+    deviceList: List<Device>, onItemClick: (Device) -> Unit, modifier: Modifier = Modifier
 ) {
     LazyColumn(modifier = modifier) {
-        items(items = itemList, key = { it.id }) { item ->
+        items(items = deviceList, key = { it.id }) { item ->
             DeviceItem(item = item,
                 modifier = Modifier
                     .padding(dimensionResource(id = R.dimen.padding_small))
