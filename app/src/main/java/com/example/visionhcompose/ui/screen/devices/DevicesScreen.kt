@@ -36,6 +36,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -44,13 +46,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.visionhcompose.data.Device
+import com.example.visionhcompose.ui.AppViewModelProvider
 
 @Composable
 @ExperimentalMaterial3Api
 @ExperimentalFoundationApi
-fun DevicesScreen(navController: NavHostController, innerPaddingValues: PaddingValues) {
+fun DevicesScreen(navController: NavHostController, innerPaddingValues: PaddingValues, viewModel: DevicesViewModel = viewModel(factory = AppViewModelProvider.Factory)) {
+    val devicesUiState by viewModel.devicesUiState.collectAsState()
     Scaffold(
         modifier = Modifier
             .padding(innerPaddingValues)
@@ -60,7 +65,7 @@ fun DevicesScreen(navController: NavHostController, innerPaddingValues: PaddingV
         },
         content = { innerPadding ->
             DeviceBody(
-                deviceList = listOf(),
+                deviceList = devicesUiState.devicesList,
                 onItemClick = {},
                 modifier = Modifier
                     .padding(innerPadding)
@@ -113,7 +118,7 @@ private fun DeviceBody(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Top,
         modifier = modifier
     ) {
         if (deviceList.isEmpty()) {

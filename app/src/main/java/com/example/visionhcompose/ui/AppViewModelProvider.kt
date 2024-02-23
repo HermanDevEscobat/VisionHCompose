@@ -29,7 +29,7 @@ object AppViewModelProvider {
 //        }
 
         initializer {
-            DevicesViewModel()
+            DevicesViewModel(visionhApplication().container.devicesRepository)
         }
     }
 }
